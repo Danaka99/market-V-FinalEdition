@@ -19,7 +19,7 @@ body{font-family: "Lato", sans-serif; font-size: 14px; color: rgba(0,0,0,0.8); o
 .css-10nakn3-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiPaper-elevation{max-height: 350px !important; width:280px !important;}
 
 button .MuiCircularProgress-root{width: 30px !important; height: 30px !important;}
-  button svg{color: #fff;}
+  button svg{color: #6d4aae;}
 
 .badge{display: inline-block; padding: 7px 10px; border-radius: 20px;}
 .badge.bg-success{background: #e5f8ed !important; color: #16b858 !important;}

@@ -18,6 +18,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import homeBannerPlaceholder from "../../assets/images/homeBannerPlaceholder.jpg";
 import Banners from "../../Components/banners";
 import { Link } from "react-router-dom";
+import ChatBox from "../Chat"
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -455,6 +456,9 @@ const Home = () => {
             </>
           )}
       </div>
+      
+      <ChatBox/>
+            
     </>
   );
 };
