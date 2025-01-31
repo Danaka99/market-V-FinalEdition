@@ -14,6 +14,7 @@ import { fetchDataFromApi, postData } from "../../utils/api";
 import CircularProgress from "@mui/material/CircularProgress";
 import { MyContext } from "../../App";
 import { FaHeart } from "react-icons/fa";
+import { FaCodeCompare } from "react-icons/fa6";
 
 
 const ProductDetails = () => {
@@ -225,6 +226,52 @@ const ProductDetails = () => {
     }
   };
 
+  const addToMyCompareList = (id) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user !== undefined && user !== null && user !== "") {
+      const data = {
+        productTitle: productData?.name,
+        image: productData?.images[0],
+        rating: productData?.rating,
+        price: productData?.price,
+        productId: id,
+        userId: user?.userId,
+      };
+      postData(`/api/compare-list/add/`, data).then((res) => {
+        if (res.status !== false) {
+          context.setAlertBox({
+            open: true,
+            error: false,
+            msg: "the product added in Compare list",
+          });
+
+          fetchDataFromApi(
+            `/api/compare-list?productId=${id}&userId=${user?.userId}`
+          ).then((res) => {
+            if (res.length !== 0) {
+              setSsAddedToMyList(true);
+            }
+          });
+        } else {
+          context.setAlertBox({
+            open: true,
+            error: true,
+            msg: res.msg,
+          });
+        }
+      });
+    } else {
+      context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Please Login to continue",
+      });
+    }
+  };
+
+
+  
+
   return (
     <>
       <section className="productDetails section">
@@ -407,8 +454,13 @@ const ProductDetails = () => {
                     </Tooltip>
 
                     <Tooltip title="Add to Compare" placement="top">
-                      <Button className="btn-blue btn-lg btn-big btn-circle ml-2">
-                        <MdOutlineCompareArrows />
+                      <Button className="btn-blue btn-lg btn-big btn-circle ml-2"
+                      onClick={() => addToMyCompareList(id)}>
+                        {addToMyCompareList === true ? (
+                          <FaCodeCompare className="text-danger" />
+                        ) : (
+                          <FaCodeCompare />
+                        )}
                       </Button>
                     </Tooltip>
                   </div>

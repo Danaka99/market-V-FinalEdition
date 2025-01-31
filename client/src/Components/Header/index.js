@@ -25,6 +25,7 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa6";
 import { CiFilter } from "react-icons/ci";
 import { IoBagCheckOutline } from "react-icons/io5";
+import { FaCodeCompare } from "react-icons/fa6";
 
 
 const Header = () => {
@@ -250,6 +251,14 @@ const Header = () => {
                             </ListItemIcon>
                             Logout
                           </MenuItem>
+                          <Link to="/compare">
+                          <MenuItem>
+                            <ListItemIcon>
+                              <FaCodeCompare fontSize="small" />
+                            </ListItemIcon>
+                            Compare
+                          </MenuItem>
+                          </Link>
                         </Menu>
                       </div>
                     )}

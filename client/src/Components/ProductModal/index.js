@@ -22,6 +22,7 @@ const ProductModal = (props) => {
     const [activeSize, setActiveSize] = useState(null);
     const [tabError, setTabError] = useState(false);
     const [isAddedToMyList, setSsAddedToMyList] = useState(false);
+    const [addToMycompareList, setAddToMyCompareList] = useState(false);
 
     const context = useContext(MyContext);
 
@@ -38,7 +39,14 @@ const ProductModal = (props) => {
             }
         })
 
+        fetchDataFromApi(`/api/compare-list?productId=${props?.data?.id}&userId=${user?.userId}`).then((res) => {
+            if (res.length !== 0) {
+                setAddToMyCompareList(true);
+            }
+        })
+
     }, [])
+
 
     const quantity = (val) => {
         setProductQuantity(val);
@@ -139,6 +147,49 @@ const ProductModal = (props) => {
         }
 
     }
+
+    const addToMyCompareList = (id) => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user !== undefined && user !== null && user !== "") {
+          const data = {
+            productTitle: props?.data?.name,
+                image: props?.data?.images[0],
+                rating: props?.data?.rating,
+                price: props?.data?.price,
+                productId: id,
+                userId: user?.userId,
+          };
+          postData(`/api/compare-list/add/`, data).then((res) => {
+            if (res.status !== false) {
+              context.setAlertBox({
+                open: true,
+                error: false,
+                msg: "the product added in Compare list",
+              });
+    
+              fetchDataFromApi(
+                `/api/compare-list?productId=${id}&userId=${user?.userId}`
+              ).then((res) => {
+                if (res.length !== 0) {
+                  setSsAddedToMyList(true);
+                }
+              });
+            } else {
+              context.setAlertBox({
+                open: true,
+                error: true,
+                msg: res.msg,
+              });
+            }
+          });
+        } else {
+          context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "Please Login to continue",
+          });
+        }
+      };
 
 
     return (
@@ -245,7 +296,7 @@ const ProductModal = (props) => {
                         <div className='d-flex align-items-center mt-5 actions'>
                             <Button className='btn-round btn-sml' variant="outlined" onClick={() => addToMyList(props?.data?.id)} >
 
-                                {
+                                {/* {
                                     isAddedToMyList === true ?
                                     <>
                                         <FaHeart className="text-danger" />
@@ -258,11 +309,26 @@ const ProductModal = (props) => {
                                     <IoIosHeartEmpty />
                                     &nbsp; ADD TO WISHLIST
                                 </>
-                                }
+                                } */}
 
-
+                                 <IoIosHeartEmpty />&nbsp; ADD TO WISHLIST
                             </Button>
-                            <Button className='btn-round btn-sml ml-3' variant="outlined"><MdOutlineCompareArrows /> &nbsp; COMPARE</Button>
+                            <Button className='btn-round btn-sml ml-3' variant="outlined" onClick={() => addToMyCompareList(props?.data?.id)}>
+                                {
+                                    addToMycompareList === true ?
+                                    <>
+                                        <MdOutlineCompareArrows className="text-danger" />
+                                        &nbsp; ADDED TO COMPARE LIST
+                                    </>
+
+                                    :
+
+                                <>
+                                    <MdOutlineCompareArrows />
+                                    &nbsp; ADD TO COMPARE LIST
+                                </>
+                                }
+                            </Button>
                         </div>
 
                     </div>
