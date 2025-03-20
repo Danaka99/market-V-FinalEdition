@@ -43,7 +43,6 @@ const homeSideBannerSchema = require('./routes/homeSideBanner.js');
 const homeBottomBannerSchema = require('./routes/homeBottomBanner.js');
 const paymentRoutes = require("./routes/payment.js");
 const compareListSchema = require('./routes/compareList.js');
-const compareController = require('./routes/compareController.js');
 
 app.use("/api/user",userRoutes);
 app.use("/uploads",express.static("uploads"));
@@ -65,7 +64,6 @@ app.use(`/api/homeBottomBanners`, homeBottomBannerSchema);
 app.use("/api/payment", paymentRoutes);
 app.use(`/api/compare-list`, compareListSchema);
 app.use(`/api/compare-list`, compareListSchema);
-app.use('/api', compareController);
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {

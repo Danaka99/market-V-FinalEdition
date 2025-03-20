@@ -39,6 +39,7 @@ const Compare = () => {
             
             const user = JSON.parse(localStorage.getItem("user"));
             fetchDataFromApi(`/api/compare-list?userId=${user?.userId}`).then((res) => {
+                console.log("Compare List Data:", res); 
                 setmyCompareListData(res);
             })
     
@@ -86,14 +87,14 @@ const Compare = () => {
     }
 
     setIsLoading(true);
+    const productNames = selectedProducts.map(p => p.productTitle);
+
     try {
-        const response = await fetch("/api/compare-products", {
+        // Fetch product details from the internet using an AI-powered API
+        const response = await fetch("/api/compare-products-ai", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                product1Id: selectedProducts[0]._id,
-                product2Id: selectedProducts[1]._id
-            })
+            body: JSON.stringify({ productNames })
         });
 
         const text = await response.text();  // Log raw response
@@ -113,6 +114,7 @@ const Compare = () => {
     }
     setIsLoading(false);
 };
+
 
 
     
@@ -135,8 +137,9 @@ const Compare = () => {
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th width="50%">Product</th>
+                                                        <th width="40%">Product</th>
                                                         <th width="15%">Unit Price</th>
+                                                        <th width="10%">Description</th>
                                                         <th width="10%">Remove</th>
                                                     </tr>
                                                 </thead>
@@ -166,6 +169,7 @@ const Compare = () => {
                                                                         </Link>
                                                                     </td>
                                                                     <td width="15%">Rs {item?.price}</td>
+                                                                    <td width="15%">{item?.product?.description}</td>
 
 
                                                                     <td width="10%"><span className="remove" onClick={() => removeItem(item?._id)}><IoIosClose /></span></td>

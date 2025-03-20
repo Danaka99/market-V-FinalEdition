@@ -1,6 +1,7 @@
 const { CompareList } = require('../models/compareList');
 const express = require('express');
 const router = express.Router();
+const { Product } = require('../models/products');
 
 // Get all compared products
 router.get(`/`, async (req, res) => {
@@ -30,7 +31,8 @@ router.post('/add', async (req, res) => {
                 rating: req.body.rating,
                 price: req.body.price,
                 productId: req.body.productId,
-                userId: req.body.userId
+                userId: req.body.userId,
+                description: product.description 
             });
 
             compareItem = await compareItem.save();
@@ -72,5 +74,6 @@ router.get('/:id', async (req, res) => {
         return res.status(500).json({ success: false, error: error.message });
     }
 });
+
 
 module.exports = router;

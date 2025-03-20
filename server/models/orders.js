@@ -63,6 +63,10 @@ const ordersSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    trackingNumber: {
+        type: String, // Can be alphanumeric
+        default: null // Default value is null if not assigned
+    },
 
 })
 

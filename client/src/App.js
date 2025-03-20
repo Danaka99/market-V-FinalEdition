@@ -27,6 +27,7 @@ import { fetchDataFromApi, postData } from "./utils/api";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Compare from "./Pages/Compare";
+import TrackOrder from "./Pages/TrackOrder";
 
 const MyContext = createContext();
 
@@ -276,6 +277,7 @@ function App() {
           <Route exact={true} path="/compare" element={<Compare />} />
           <Route exact={true} path="/checkout" element={<Checkout />} />
           <Route exact={true} path="/orders" element={<Orders />} />
+          <Route exact={true} path="/track-order/:orderId" element={<TrackOrder />} />
           <Route exact={true} path="/my-account" element={<MyAccount />} />
           <Route exact={true} path="/search" element={<SearchPage />} />
           <Route exact={true} path="/verifyOTP" element={<VerifyOTP />} />
