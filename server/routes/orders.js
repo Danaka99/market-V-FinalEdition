@@ -1,5 +1,7 @@
 const { Orders } = require("../models/orders");
 const { getToken, track } = require("../utils/fedexService");
+const { sendEmail } = require("./../utils/emailService");
+const {orderConfirmationTemplate} = require("./../utils/emailTemplates")
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
@@ -250,44 +252,45 @@ router.get(`/get/count`, async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  let order = new Orders({
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    address: req.body.address,
-    pincode: req.body.pincode,
-    amount: req.body.amount,
-    paymentId: req.body.paymentId,
-    email: req.body.email,
-    userid: req.body.userid,
-    products: req.body.products,
-    date: req.body.date,
-  });
+  console.log ("hi");
+  try {
+    let order = new Orders({
+      name: req.body.name,
+      phoneNumber: req.body.phoneNumber,
+      address: req.body.address,
+      pincode: req.body.pincode,
+      amount: req.body.amount,
+      paymentId: req.body.paymentId,
+      email: req.body.email,
+      userid: req.body.userid,
+      products: req.body.products,
+      date: req.body.date,
+    });
 
-  let order1 = {
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    address: req.body.address,
-    pincode: req.body.pincode,
-    amount: req.body.amount,
-    paymentId: req.body.paymentId,
-    email: req.body.email,
-    userid: req.body.userid,
-    products: req.body.products,
-    date: req.body.date,
-  };
+    if (!order) {
+      return res.status(500).json({
+        error: "Order creation failed",
+        success: false,
+      });
+    }
 
-  console.log(order1);
+    order = await order.save();
+    const emailTemplate = orderConfirmationTemplate(order)
 
-  if (!order) {
-    res.status(500).json({
-      error: err,
+    const emailResponse = await sendEmail(
+      order.email,
+      `Recipte - ${order._id}`,
+      `Here is your Recipt for payment - ${order.paymentId}`,
+      emailTemplate
+    );
+    console.log("emailResponse : ", emailResponse);
+    return res.status(201).json(order);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
       success: false,
     });
   }
-
-  order = await order.save();
-
-  res.status(201).json(order);
 });
 
 router.delete("/:id", async (req, res) => {

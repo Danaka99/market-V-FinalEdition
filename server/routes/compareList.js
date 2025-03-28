@@ -18,6 +18,7 @@ router.get(`/`, async (req, res) => {
 
 // Add a product to compare list
 router.post('/add', async (req, res) => {
+    console.log("adding");
     try {
         const existingItem = await CompareList.find({
             productId: req.body.productId,
@@ -32,7 +33,7 @@ router.post('/add', async (req, res) => {
                 price: req.body.price,
                 productId: req.body.productId,
                 userId: req.body.userId,
-                description: product.description 
+                description: "abs"
             });
 
             compareItem = await compareItem.save();
@@ -41,6 +42,7 @@ router.post('/add', async (req, res) => {
             return res.status(401).json({ status: false, msg: "Product already added in the Compare List" });
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ success: false, error: error.message });
     }
 });

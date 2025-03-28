@@ -4,6 +4,8 @@ const { MyList } = require("../models/myList");
 const { Cart } = require("../models/cart");
 const { RecentlyViewd } = require("../models/recentlyViewd.js");
 const { ImageUpload } = require("../models/imageUpload.js");
+const { sendEmail } = require("./../utils/emailService.js");
+const axios = require("axios");
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -203,7 +205,7 @@ router.get(`/catId`, async (req, res) => {
       }
     }
 
-    if (req.query.location !== "All" && req.query.location!==undefined) {
+    if (req.query.location !== "All" && req.query.location !== undefined) {
       return res.status(200).json({
         products: productList,
         totalPages: totalPages,
@@ -216,10 +218,6 @@ router.get(`/catId`, async (req, res) => {
         page: page,
       });
     }
-
-
-   
-
   }
 });
 
@@ -644,6 +642,106 @@ router.put("/:id", async (req, res) => {
   });
 
   //res.send(product);
+});
+
+router.post(`/compare`, async (req, res) => {
+  try {
+    const requestPayLoad = req.body;
+
+    const product1Id = requestPayLoad.product_1;
+    const product_2Id = requestPayLoad.product_2;
+
+    let product1, product2;
+    try {
+      product1 = await Product.findById(product1Id).populate("category");
+      product2 = await Product.findById(product_2Id).populate("category");
+    } catch (error) {
+      return res.status(500).json({ message: error.message, error });
+    }
+
+    if (!product1 || !product2) {
+      res
+        .status(404)
+        .json({ message: "The product with the given ID was not found." });
+    }
+
+    if (product1.catId !== product2.catId) {
+      return res
+        .status(400)
+        .json({ message: "Products belong to different categories!" });
+    }
+
+    if (product1.subCatId !== product2.subCatId) {
+      return res
+        .status(400)
+        .json({ message: "Products belong to different subcategories!" });
+    }
+
+    const product1Name = product1.name;
+    const product2Name = product2.name;
+
+    const product1Price = product1.price;
+    const product2Price = product2.price;
+
+    const product1CountInStock = product1.countInStock;
+    const product2CountInStock = product2.countInStock;
+
+    const payLoad = {
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `${product1Name} and ${product2Name}`,
+            },
+          ],
+        },
+      ],
+      systemInstruction: {
+        role: "user",
+        parts: [
+          {
+            text: "Provide a specification comparison of 2 items in JSON format using the following structure: {[specification1: {item1: feature1, item2: feature1}, specification2: {item1: feature2, item2: feature2}]}. Ensure that the specifications are well-organized, accurate, and structured properly",
+          },
+        ],
+      },
+      generationConfig: {
+        temperature: 1,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 8192,
+        responseMimeType: "text/plain",
+      },
+    };
+
+    const response = await axios.post(
+      `${process.env.GEMINI_API_URL}/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      payLoad,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let rawText = response.data.candidates[0].content.parts[0].text;
+    rawText = rawText.replace(/```json|```/g, "").trim();
+
+    const jsonData = JSON.parse(rawText);
+
+    const returnResponse = {
+      specifications: jsonData,
+      product1Price: product1Price,
+      product2Price: product2Price,
+      product1CountInStock: product1CountInStock,
+      product2CountInStock: product2CountInStock,
+    };
+
+    return res.status(200).json(returnResponse);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message, error });
+  }
 });
 
 // router.get(`/`, async (req, res) => {

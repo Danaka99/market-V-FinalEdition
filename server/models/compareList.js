@@ -24,10 +24,6 @@ const compareListSchema = mongoose.Schema({
     userId: {
         type: String,
         required: true
-    },
-    description: {  // Added description field
-        type: String,
-        required: true
     }
 });
 
