@@ -1,44 +1,33 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { ImageUpload } = require('../models/imageUpload.js');
+const { ImageUpload } = require("../models/imageUpload.js");
 
 router.get(`/`, async (req, res) => {
+  try {
+    const imageUploadList = await ImageUpload.find();
 
-    try {
-    
-        const imageUploadList = await ImageUpload.find();
-
-
-        if (!imageUploadList) {
-            res.status(500).json({ success: false })
-        }
-
-        return res.status(200).json(imageUploadList);
-
-    } catch (error) {
-        res.status(500).json({ success: false })
+    if (!imageUploadList) {
+      res.status(500).json({ success: false });
     }
 
-
+    return res.status(200).json(imageUploadList);
+  } catch (error) {
+    res.status(500).json({ success: false });
+  }
 });
 
+router.delete("/deleteAllImages", async (req, res) => {
+  const images = await ImageUpload.find();
+  let deletedImage;
 
-router.delete('/deleteAllImages', async (req, res) => {
-
-    const images = await ImageUpload.find();
-    let deletedImage;
-    
-    if (images.length !== 0) {
-        for (image of images) {
-            deletedImage = await ImageUpload.findByIdAndDelete(image.id);
-            //console.log(image)
-        }
+  if (images.length !== 0) {
+    for (image of images) {
+      deletedImage = await ImageUpload.findByIdAndDelete(image.id);
     }
-
-    res.json(deletedImage)
-
+    res.json(deletedImage);
+  } else {
+    res.json({ message: "No images to delete" });
+  }
 });
-
 
 module.exports = router;
-

@@ -13,13 +13,18 @@ const bannersSchema = mongoose.Schema({
   catName: {
     type: String,
   },
-  subCatId:{
+  subCatId: {
     type: String,
   },
-  subCatName:{
+  subCatName: {
     type: String,
-  }
+  },
 });
+
+// Custom validator for non-empty images array
+bannersSchema.path("images").validate(function (value) {
+  return value && value.length > 0;
+}, "At least one image is required");
 
 bannersSchema.virtual("id").get(function () {
   return this._id.toHexString();

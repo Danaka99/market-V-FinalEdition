@@ -3,6 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const connectDB = require("./helper/database");
+const logger = require("./middleware/logger");
 require('dotenv/config');
 
 const corsOptions = {
@@ -16,13 +18,15 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.options('*', cors())
 
 //middleware
 app.use(bodyParser.json());
 app.use(express.json());
 
+// Logger middleware
+app.use(logger);
 
 //Routes
 const userRoutes = require('./routes/user.js');
@@ -63,20 +67,10 @@ app.use(`/api/homeSideBanners`, homeSideBannerSchema);
 app.use(`/api/homeBottomBanners`, homeBottomBannerSchema);
 app.use("/api/payment", paymentRoutes);
 app.use(`/api/compare-list`, compareListSchema);
-app.use(`/api/compare-list`, compareListSchema);
 
-//Database
-mongoose.connect(process.env.CONNECTION_STRING, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-    .then(() => {
-        console.log('Database Connection is ready...');
-        //Server
-        app.listen(process.env.PORT, () => {
-            console.log(`server is running http://localhost:${process.env.PORT}`);
-        })
-    })
-    .catch((err) => {
-        console.log(err);
-    })
+// Connect to database and start server
+connectDB().then(() => {
+  app.listen(process.env.PORT, () => {
+    console.log(`🚀 Server is running on http://localhost:${process.env.PORT}`);
+  });
+});

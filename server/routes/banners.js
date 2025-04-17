@@ -5,14 +5,7 @@ const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
 
-const cloudinary = require("cloudinary").v2;
-
-cloudinary.config({
-  cloud_name: process.env.cloudinary_Config_Cloud_Name,
-  api_key: process.env.cloudinary_Config_api_key,
-  api_secret: process.env.cloudinary_Config_api_secret,
-  secure: true,
-});
+const cloudinary = require("../helper/cloudinary");
 
 var imagesArr = [];
 
@@ -75,12 +68,9 @@ router.get(`/`, async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  slideEditId = req.params.id;
-
   const slide = await Banner.findById(req.params.id);
-
   if (!slide) {
-    res
+    return res
       .status(500)
       .json({ message: "The Banner with the given ID was not found." });
   }
@@ -91,9 +81,9 @@ router.post("/create", async (req, res) => {
   let newEntry = new Banner({
     images: imagesArr,
     catId: req.body.catId,
-    catName:req.body.catName,
+    catName: req.body.catName,
     subCatId: req.body.subCatId,
-    subCatName:req.body.subCatName
+    subCatName: req.body.subCatName,
   });
 
   if (!newEntry) {
@@ -134,6 +124,14 @@ router.delete("/deleteImage", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const item = await Banner.findById(req.params.id);
+
+  if (!item) {
+    return res.status(404).json({
+      message: "Banner not found!",
+      success: false,
+    });
+  }
+
   const images = item.images;
 
   for (img of images) {
@@ -170,9 +168,9 @@ router.put("/:id", async (req, res) => {
     {
       images: req.body.images,
       catId: req.body.catId,
-      catName:req.body.catName,
+      catName: req.body.catName,
       subCatId: req.body.subCatId,
-      subCatName:req.body.subCatName
+      subCatName: req.body.subCatName,
     },
     { new: true }
   );

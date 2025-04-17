@@ -1,21 +1,25 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const homeBannerSchema = mongoose.Schema({
-    images:[
-        {
-            type:String,
-            required:true
-        }
-    ]
-})
-
-homeBannerSchema.virtual('id').get(function () {
-    return this._id.toHexString();
+  images: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: function (v) {
+        return v && v.length > 0;
+      },
+      message: "At least one image is required",
+    },
+  },
 });
 
-homeBannerSchema.set('toJSON', {
-    virtuals: true,
+homeBannerSchema.virtual("id").get(function () {
+  return this._id.toHexString();
 });
 
-exports.HomeBanner = mongoose.model('HomeBanner', homeBannerSchema);
+homeBannerSchema.set("toJSON", {
+  virtuals: true,
+});
+
+exports.HomeBanner = mongoose.model("HomeBanner", homeBannerSchema);
 exports.homeBannerSchema = homeBannerSchema;
