@@ -12,6 +12,7 @@ on:
       - main
     paths:
       - "server/**"
+      - ".github/workflows/server-ci.yml"
 
   workflow_dispatch:
 
