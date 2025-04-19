@@ -49,10 +49,10 @@ jobs:
           cd server
           npm run test:integration
 
-      # - name: Run Performance Tests
-      #   run: |
-      #     cd server
-      #     npm run test:performance
+      - name: Run Performance Tests
+        run: |
+          cd server
+          npm run test:performance
 
       - name: Generate Test Coverage
         run: |
