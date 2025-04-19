@@ -1,4 +1,4 @@
-name: Server CI Pipeline
+name: market-V-FinalEdition
 
 on:
   push:
