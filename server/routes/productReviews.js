@@ -29,18 +29,30 @@ router.get(`/`, async (req, res) => {
 
 });
 
-router.get(`/get/count`, async (req, res) =>{
-    const productsReviews = await ProductReviews.countDocuments()
+// router.get(`/get/count`, async (req, res) =>{
+//     const productsReviews = await ProductReviews.countDocuments()
 
-    if(!productsReviews) {
-        res.status(500).json({success: false})
-    } else{
-        res.send({
-            productsReviews: productsReviews
-        });
-    }
+//     if(!productsReviews) {
+//         res.status(500).json({success: false})
+//     } else{
+//         res.send({
+//             productsReviews: productsReviews
+//         });
+//     }
    
-})
+// })
+
+router.get(`/get/count`, async (req, res) => {
+  const productsReviews = await ProductReviews.countDocuments();
+
+  if (!productsReviews) {
+    return res
+      .status(500)
+      .json({ success: false, message: "No reviews found" });
+  }
+
+  return res.status(200).send({ productsReviews: productsReviews });
+});
 
 
 
@@ -57,31 +69,66 @@ router.get('/:id', async (req, res) => {
 
 
 
-router.post('/add', async (req, res) => {
+// router.post('/add', async (req, res) => {
     
-    let review = new ProductReviews({
-        customerId: req.body.customerId,
-        customerName: req.body.customerName,
-        review:req.body.review,
-        customerRating: req.body.customerRating,
-        productId: req.body.productId
+//     let review = new ProductReviews({
+//         customerId: req.body.customerId,
+//         customerName: req.body.customerName,
+//         review:req.body.review,
+//         customerRating: req.body.customerRating,
+//         productId: req.body.productId
+//     });
+
+
+
+//     if (!review) {
+//         res.status(500).json({
+//             error: err,
+//             success: false
+//         })
+//     }
+
+
+//     review = await review.save();
+
+
+//     res.status(201).json(review);
+
+// });
+
+router.post("/add", async (req, res) => {
+  if (
+    !req.body.customerId ||
+    !req.body.customerName ||
+    !req.body.review ||
+    !req.body.customerRating ||
+    !req.body.productId
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Required fields are missing",
     });
+  }
+  let review = new ProductReviews({
+    customerId: req.body.customerId,
+    customerName: req.body.customerName,
+    review: req.body.review,
+    customerRating: req.body.customerRating,
+    productId: req.body.productId,
+  });
 
+  if (!review) {
+    console.log("Review not created.");
 
+    return res.status(500).json({
+      error: err,
+      success: false,
+    });
+  }
 
-    if (!review) {
-        res.status(500).json({
-            error: err,
-            success: false
-        })
-    }
+  review = await review.save();
 
-
-    review = await review.save();
-
-
-    res.status(201).json(review);
-
+  res.status(201).json(review);
 });
 
 

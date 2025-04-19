@@ -33,28 +33,51 @@ router.get('/:id', async (req, res) => {
 })
 
 
-router.post('/create', async (req, res) => {
+// router.post('/create', async (req, res) => {
     
-    let productsize = new ProductSize({
-        size: req.body.size
+//     let productsize = new ProductSize({
+//         size: req.body.size
+//     });
+
+
+
+//     if (!productsize) {
+//         res.status(500).json({
+//             error: err,
+//             success: false
+//         })
+//     }
+
+
+//     productsize = await productsize.save();
+
+//     res.status(201).json(productsize);
+
+// });
+
+router.post("/create", async (req, res) => {
+  if (!req.body.size) {
+    return res.status(500).json({
+      message: "Empty size field",
+      success: false,
     });
+  }
 
+  let productsize = new ProductSize({
+    size: req.body.size,
+  });
 
+  if (!productsize) {
+    return res.status(500).json({
+      error: err,
+      success: false,
+    });
+  }
 
-    if (!productsize) {
-        res.status(500).json({
-            error: err,
-            success: false
-        })
-    }
+  productsize = await productsize.save();
 
-
-    productsize = await productsize.save();
-
-    res.status(201).json(productsize);
-
+  res.status(201).json(productsize);
 });
-
 
 router.delete('/:id', async (req, res) => {
     const deletedItem = await ProductSize.findByIdAndDelete(req.params.id);

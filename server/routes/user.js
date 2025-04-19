@@ -65,16 +65,11 @@ router.post(`/upload`, upload.array("images"), async (req, res) => {
   }
 });
 
+
 router.post(`/signup`, async (req, res) => {
   const { name, phone, email, password, isAdmin } = req.body;
 
   try {
-    // Generate verification code
-    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
-    let user;
-
-    // If the user exists but is not verified, update the existing user
-
     const existingUser = await User.findOne({ email: email });
     const existingUserByPh = await User.findOne({ phone: phone });
 
@@ -94,56 +89,25 @@ router.post(`/signup`, async (req, res) => {
       return;
     }
 
-    if (existingUser) {
-      const hashPassword = await bcrypt.hash(password, 10);
-      existingUser.password = hashPassword;
-      existingUser.otp = verifyCode;
-      existingUser.otpExpires = Date.now() + 600000; // 10 minutes
-      await existingUser.save();
-      user = existingUser;
-    } else {
-      // Create a new user
-      const hashPassword = await bcrypt.hash(password, 10);
+    const hashPassword = await bcrypt.hash(password, 10);
 
-      user = new User({
-        name,
-        email,
-        phone,
-        password: hashPassword,
-        isAdmin,
-        otp: verifyCode,
-        otpExpires: Date.now() + 600000, // 10 minutes
-      });
+    const result = await User.create({
+      name: name,
+      phone: phone,
+      email: email,
+      password: hashPassword,
+      isAdmin: isAdmin,
+    });
 
-      await user.save();
-    }
-
-    // Send verification email
-    const resp = sendEmailFun(
-      email,
-      "Verify Email",
-      "",
-      "Your OTP is " + verifyCode
-    );
-
-    // Create a JWT token for verification purposes
     const token = jwt.sign(
-      { email: user.email, id: user._id },
+      { email: result.email, id: result._id },
       process.env.JSON_WEB_TOKEN_SECRET_KEY
     );
 
-    // res.cookie('token', token, {
-    //     httpOnly: false,
-    //     sameSite: "none",0
-    //     secure: true,
-    //     maxAge: 3600000,
-    // });
-
-    // Send success response
-    return res.status(200).json({
-      success: true,
-      message: "User registered successfully! Please verify your email.",
-      token: token, // Optional: include this if needed for verification
+    res.status(200).json({
+      user: result,
+      token: token,
+      msg: "User Register Successfully",
     });
   } catch (error) {
     console.log(error);
@@ -151,6 +115,125 @@ router.post(`/signup`, async (req, res) => {
     return;
   }
 });
+
+router.post(`/signin`, async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email: email });
+    if (!existingUser) {
+      res.status(404).json({ error: true, msg: "User not found!" });
+      return;
+    }
+
+    const matchPassword = await bcrypt.compare(password, existingUser.password);
+
+    if (!matchPassword) {
+      return res.status(400).json({ error: true, msg: "Invailid credentials" });
+    }
+
+    const token = jwt.sign(
+      { email: existingUser.email, id: existingUser._id },
+      process.env.JSON_WEB_TOKEN_SECRET_KEY
+    );
+
+    return res.status(200).send({
+      user: existingUser,
+      token: token,
+      msg: "user Authenticated",
+    });
+  } catch (error) {
+    res.status(500).json({ error: true, msg: "something went wrong" });
+    return;
+  }
+});
+
+// router.post(`/signup`, async (req, res) => {
+//   const { name, phone, email, password, isAdmin } = req.body;
+
+//   try {
+//     // Generate verification code
+//     const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+//     let user;
+
+//     // If the user exists but is not verified, update the existing user
+
+//     const existingUser = await User.findOne({ email: email });
+//     const existingUserByPh = await User.findOne({ phone: phone });
+
+//     if (existingUser) {
+//       res.json({
+//         status: "FAILED",
+//         msg: "User already exist with this email!",
+//       });
+//       return;
+//     }
+
+//     if (existingUserByPh) {
+//       res.json({
+//         status: "FAILED",
+//         msg: "User already exist with this phone number!",
+//       });
+//       return;
+//     }
+
+//     if (existingUser) {
+//       const hashPassword = await bcrypt.hash(password, 10);
+//       existingUser.password = hashPassword;
+//       existingUser.otp = verifyCode;
+//       existingUser.otpExpires = Date.now() + 600000; // 10 minutes
+//       await existingUser.save();
+//       user = existingUser;
+//     } else {
+//       // Create a new user
+//       const hashPassword = await bcrypt.hash(password, 10);
+
+//       user = new User({
+//         name,
+//         email,
+//         phone,
+//         password: hashPassword,
+//         isAdmin,
+//         otp: verifyCode,
+//         otpExpires: Date.now() + 600000, // 10 minutes
+//       });
+
+//       await user.save();
+//     }
+
+//     // Send verification email
+//     const resp = sendEmailFun(
+//       email,
+//       "Verify Email",
+//       "",
+//       "Your OTP is " + verifyCode
+//     );
+
+//     // Create a JWT token for verification purposes
+//     const token = jwt.sign(
+//       { email: user.email, id: user._id },
+//       process.env.JSON_WEB_TOKEN_SECRET_KEY
+//     );
+
+//     // res.cookie('token', token, {
+//     //     httpOnly: false,
+//     //     sameSite: "none",0
+//     //     secure: true,
+//     //     maxAge: 3600000,
+//     // });
+
+//     // Send success response
+//     return res.status(200).json({
+//       success: true,
+//       message: "User registered successfully! Please verify your email.",
+//       token: token, // Optional: include this if needed for verification
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.json({ status: "FAILED", msg: "something went wrong" });
+//     return;
+//   }
+// });
 
 router.post(`/verifyAccount/resendOtp`, async (req, res) => {
   const { email } = req.body;
@@ -272,46 +355,46 @@ router.post("/verifyemail", async (req, res) => {
   }
 });
 
-router.post(`/signin`, async (req, res) => {
-  const { email, password } = req.body;
+// router.post(`/signin`, async (req, res) => {
+//   const { email, password } = req.body;
 
-  try {
-    const existingUser = await User.findOne({ email: email });
-    if (!existingUser) {
-      res.status(404).json({ error: true, msg: "User not found!" });
-      return;
-    }
+//   try {
+//     const existingUser = await User.findOne({ email: email });
+//     if (!existingUser) {
+//       res.status(404).json({ error: true, msg: "User not found!" });
+//       return;
+//     }
 
-    if (existingUser.isVerified === false) {
-      res.json({
-        error: true,
-        isVerify: false,
-        msg: "Your account is not active yet please verify your account first or Sign Up with a new user",
-      });
-      return;
-    }
+//     if (existingUser.isVerified === false) {
+//       res.json({
+//         error: true,
+//         isVerify: false,
+//         msg: "Your account is not active yet please verify your account first or Sign Up with a new user",
+//       });
+//       return;
+//     }
 
-    const matchPassword = await bcrypt.compare(password, existingUser.password);
+//     const matchPassword = await bcrypt.compare(password, existingUser.password);
 
-    if (!matchPassword) {
-      return res.status(400).json({ error: true, msg: "Invailid credentials" });
-    }
+//     if (!matchPassword) {
+//       return res.status(400).json({ error: true, msg: "Invailid credentials" });
+//     }
 
-    const token = jwt.sign(
-      { email: existingUser.email, id: existingUser._id },
-      process.env.JSON_WEB_TOKEN_SECRET_KEY
-    );
+//     const token = jwt.sign(
+//       { email: existingUser.email, id: existingUser._id },
+//       process.env.JSON_WEB_TOKEN_SECRET_KEY
+//     );
 
-    return res.status(200).send({
-      user: existingUser,
-      token: token,
-      msg: "User Authenticated",
-    });
-  } catch (error) {
-    res.status(500).json({ error: true, msg: "something went wrong" });
-    return;
-  }
-});
+//     return res.status(200).send({
+//       user: existingUser,
+//       token: token,
+//       msg: "User Authenticated",
+//     });
+//   } catch (error) {
+//     res.status(500).json({ error: true, msg: "something went wrong" });
+//     return;
+//   }
+// });
 
 router.put(`/changePassword/:id`, async (req, res) => {
   const { name, phone, email, password, newPass, images } = req.body;

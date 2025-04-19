@@ -8,7 +8,9 @@
     "test": "cross-env NODE_ENV=test mocha tests/**/*.test.js --timeout 10000",
     "test:watch": "cross-env NODE_ENV=test mocha tests/**/*.test.js --watch",
     "test:coverage": "cross-env NODE_ENV=test nyc --reporter=text --reporter=html mocha tests/**/*.test.js  --timeout 10000",
-    "test:unit": "cross-env NODE_ENV=test mocha tests/unit/**/*.test.js  --timeout 10000"
+    "test:unit": "cross-env NODE_ENV=test mocha tests/unit/**/*.test.js  --timeout 10000",
+    "test:performance": "cross-env NODE_ENV=test mocha tests/performance/**/*.test.js  --timeout 10000",
+    "test:integration": "cross-env NODE_ENV=test mocha tests/integration/*.test.js  --timeout 10000"
   },
   "author": "danaka",
   "license": "ISC",

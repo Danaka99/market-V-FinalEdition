@@ -260,8 +260,47 @@ router.delete("/deleteImage", async (req, res) => {
   }
 });
 
+// router.delete("/:id", async (req, res) => {
+//   const category = await Category.findById(req.params.id);
+//   const images = category.images;
+
+//   for (img of images) {
+//     const imgUrl = img;
+//     const urlArr = imgUrl.split("/");
+//     const image = urlArr[urlArr.length - 1];
+
+//     const imageName = image.split(".")[0];
+
+//     cloudinary.uploader.destroy(imageName, (error, result) => {
+//       // console.log(error, result);
+//     });
+//     //  console.log(imageName)
+//   }
+
+//   const deletedUser = await Category.findByIdAndDelete(req.params.id);
+
+//   if (!deletedUser) {
+//     res.status(404).json({
+//       message: "Category not found!",
+//       success: false,
+//     });
+//   }
+
+//   res.status(200).json({
+//     success: true,
+//     message: "Category Deleted!",
+//   });
+// });
+
 router.delete("/:id", async (req, res) => {
   const category = await Category.findById(req.params.id);
+  if (!category) {
+    return res.status(404).json({
+      message: "Category not found!",
+      success: false,
+    });
+  }
+
   const images = category.images;
 
   for (img of images) {
@@ -280,7 +319,7 @@ router.delete("/:id", async (req, res) => {
   const deletedUser = await Category.findByIdAndDelete(req.params.id);
 
   if (!deletedUser) {
-    res.status(404).json({
+    return res.status(404).json({
       message: "Category not found!",
       success: false,
     });
@@ -291,6 +330,7 @@ router.delete("/:id", async (req, res) => {
     message: "Category Deleted!",
   });
 });
+
 
 router.put("/:id", async (req, res) => {
   

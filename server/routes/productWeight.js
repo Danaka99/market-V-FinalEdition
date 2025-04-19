@@ -33,28 +33,51 @@ router.get('/:id', async (req, res) => {
 })
 
 
-router.post('/create', async (req, res) => {
+// router.post('/create', async (req, res) => {
     
-    let productWeight = new ProductWeight({
-        productWeight: req.body.productWeight
+//     let productWeight = new ProductWeight({
+//         productWeight: req.body.productWeight
+//     });
+
+
+
+//     if (!productWeight) {
+//         res.status(500).json({
+//             error: err,
+//             success: false
+//         })
+//     }
+
+
+//     productWeight = await productWeight.save();
+
+//     res.status(201).json(productWeight);
+
+// });
+
+router.post("/create", async (req, res) => {
+  if (!req.body.productWeight) {
+    return res.status(500).json({
+      message: "Data cannot be empty",
+      success: false,
     });
+  }
 
+  let productWeight = new ProductWeight({
+    productWeight: req.body.productWeight,
+  });
 
+  if (!productWeight) {
+    return res.status(500).json({
+      error: err,
+      success: false,
+    });
+  }
 
-    if (!productWeight) {
-        res.status(500).json({
-            error: err,
-            success: false
-        })
-    }
+  productWeight = await productWeight.save();
 
-
-    productWeight = await productWeight.save();
-
-    res.status(201).json(productWeight);
-
+  res.status(201).json(productWeight);
 });
-
 
 router.delete('/:id', async (req, res) => {
     const deletedItem = await ProductWeight.findByIdAndDelete(req.params.id);

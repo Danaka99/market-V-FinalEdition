@@ -33,28 +33,51 @@ router.get('/:id', async (req, res) => {
 })
 
 
-router.post('/create', async (req, res) => {
+// router.post('/create', async (req, res) => {
     
-    let productRAMS = new ProductRams({
-        productRam: req.body.productRam
+//     let productRAMS = new ProductRams({
+//         productRam: req.body.productRam
+//     });
+
+
+
+//     if (!productRAMS) {
+//         res.status(500).json({
+//             error: err,
+//             success: false
+//         })
+//     }
+
+
+//     productRAMS = await productRAMS.save();
+
+//     res.status(201).json(productRAMS);
+
+// });
+
+router.post("/create", async (req, res) => {
+  if (!req.body.productRam) {
+    return res.status(500).json({
+      message: "Data cannot be empty",
+      success: false,
     });
+  }
 
+  let productRAMS = new ProductRams({
+    productRam: req.body.productRam,
+  });
 
+  if (!productRAMS) {
+    return res.status(500).json({
+      error: err,
+      success: false,
+    });
+  }
 
-    if (!productRAMS) {
-        res.status(500).json({
-            error: err,
-            success: false
-        })
-    }
+  productRAMS = await productRAMS.save();
 
-
-    productRAMS = await productRAMS.save();
-
-    res.status(201).json(productRAMS);
-
+  res.status(201).json(productRAMS);
 });
-
 
 router.delete('/:id', async (req, res) => {
     const deletedItem = await ProductRams.findByIdAndDelete(req.params.id);
