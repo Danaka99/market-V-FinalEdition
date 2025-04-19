@@ -1,4 +1,4 @@
-name: market-V-FinalEdition
+name: Server CI Pipeline
 
 on:
   push:
@@ -6,13 +6,11 @@ on:
       - main
     paths:
       - "server/**"
-
   pull_request:
     branches:
       - main
     paths:
       - "server/**"
-
   workflow_dispatch:
 
 jobs:
@@ -58,6 +56,10 @@ jobs:
         run: |
           cd server
           npm run test:coverage
+
+      - name: List coverage directory contents
+        run: |
+          ls -l server/coverage 
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v3
