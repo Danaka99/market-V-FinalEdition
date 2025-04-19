@@ -62,7 +62,7 @@ jobs:
           ls -l server/coverage 
 
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@7fd712f3c33dff3dfcb0dbeaa24e46e1d79a228e
         with:
           name: coverage-report
           path: server/coverage
