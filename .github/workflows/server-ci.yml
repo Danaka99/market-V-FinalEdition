@@ -6,11 +6,13 @@ on:
       - main
     paths:
       - "server/**"
+
   pull_request:
     branches:
       - main
     paths:
       - "server/**"
+
   workflow_dispatch:
 
 jobs:
@@ -57,12 +59,8 @@ jobs:
           cd server
           npm run test:coverage
 
-      - name: List coverage directory contents
-        run: |
-          ls -l server/coverage 
-
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@7fd712f3c33dff3dfcb0dbeaa24e46e1d79a228e
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-report
           path: server/coverage
