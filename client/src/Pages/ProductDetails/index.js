@@ -323,9 +323,9 @@ const ProductDetails = () => {
                 </ul>
 
                 <div className="d-flex info mb-3">
-                  <span className="oldPrice">Rs: {productData?.oldPrice}</span>
+                  <span className="oldPrice">LKR: {productData?.oldPrice}</span>
                   <span className="netPrice text-danger ml-2">
-                    Rs: {productData?.price}
+                    LKR: {productData?.price}
                   </span>
                 </div>
 
@@ -335,7 +335,7 @@ const ProductDetails = () => {
                   <span className="badge badge-danger">OUT OF STOCK</span>
                 )}
 
-                <p className="mt-3">Rs: {productData?.description}</p>
+                <p className="mt-3">LKR: {productData?.description}</p>
 
                 {productData?.productRam?.length !== 0 && (
                   <div className="productSize d-flex align-items-center">

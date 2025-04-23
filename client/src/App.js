@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./responsive.css";
-import "./ChatBox.css";
+import "../src/Pages/Chat/ClientChatBox.module.css";
 import { BrowserRouter, Route, Router, Routes, json } from "react-router-dom";
 import Home from "./Pages/Home";
 import Listing from "./Pages/Listing";

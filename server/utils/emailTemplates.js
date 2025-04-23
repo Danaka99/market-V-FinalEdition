@@ -94,7 +94,7 @@ function orderConfirmationTemplate(order) {
       
       <div class="payment-info">
           <h2>Payment Information:</h2>
-          <p><strong>Amount:</strong> Rs. ${order.amount}</p>
+          <p><strong>Amount:</strong> LKR. ${order.amount}</p>
           <p><strong>Payment ID:</strong> ${order.paymentId}</p>
       </div>
       
@@ -117,8 +117,8 @@ function orderConfirmationTemplate(order) {
                   <td><img src="${product.image}" alt="${product.productTitle}" class="product-img"></td>
                   <td>${product.productTitle}</td>
                   <td>${product.quantity}</td>
-                  <td>Rs. ${product.price}</td>
-                  <td>Rs. ${product.subTotal}</td>
+                  <td>LKR. ${product.price}</td>
+                  <td>LKR. ${product.subTotal}</td>
               </tr>
               `
                 )
@@ -126,7 +126,7 @@ function orderConfirmationTemplate(order) {
           </tbody>
       </table>
       
-      <p class="total">Order Total: Rs. ${order.amount}</p>
+      <p class="total">Order Total: LKR. ${order.amount}</p>
       
       <div class="next-steps">
           <h2>What's Next?</h2>

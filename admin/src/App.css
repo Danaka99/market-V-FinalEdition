@@ -2550,3 +2550,33 @@ body.dark .LOGINSIGHUP_TEXT {
   color: #fff;
   font-weight: bold;
 }
+
+body.dark .OrderTracking{
+  color: #fff;
+  opacity: 0.5;
+}
+body.light .OrderTracking {
+  color: #000;
+}
+body.dark .css-1pysi21-MuiFormLabel-root-MuiInputLabel-root{
+  color : #fff !important;
+}
+
+body.dark .css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input{
+  color: #fff !important;
+}
+
+body.dark .FedexSubmit{
+  color: #fff !important;
+}
+
+body.dark .TrackingADD{
+  background-color: #24292f;
+}
+body.light .TrackingADD {
+  background-color: #24292f;
+}
+body.light .FedexSubmit {
+ color: #fff !important;
+}
+

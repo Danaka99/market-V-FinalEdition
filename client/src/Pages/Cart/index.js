@@ -150,11 +150,11 @@ const Cart = () => {
                                                                         </div>
                                                                     </Link>
                                                                 </td>
-                                                                <td width="15%">Rs {item?.price}</td>
+                                                                <td width="15%">LKR {item?.price}</td>
                                                                 <td width="25%">
                                                                     <QuantityBox quantity={quantity} item={item} selectedItem={selectedItem} value={item?.quantity} />
                                                                 </td>
-                                                                <td width="15%">Rs. {item?.subTotal}</td>
+                                                                <td width="15%">LKR. {item?.subTotal}</td>
                                                                 <td width="10%"><span className="remove" onClick={() => removeItem(item?._id)}><IoIosClose /></span></td>
                                                             </tr>
                                                         )

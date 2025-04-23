@@ -126,6 +126,18 @@ const Compare = () => {
               There are <b className="text-red">{myCompareListData?.length}</b>{" "}
               products in your Compare List
             </p>
+            <br/>
+            <h2 className="hd mb-1">Important Note</h2>
+                      <p>
+                        You can only compare{" "}
+                        <b className="text-red">two products</b> from the{" "}
+                        <b className="text-red">same category</b> at a time.
+                        Products from{" "}
+                        <b className="text-red">
+                          different categories cannot be compared
+                        </b>
+                        . 🚀
+                      </p>
             {myCompareListData?.length !== 0 ? (
               <div className="row">
                 <div className="col-md-12 pr-5">
@@ -143,36 +155,43 @@ const Compare = () => {
                           myCompareListData?.map((item, index) => {
                             return (
                               <tr>
-                                <td width="50%">
-                                  <Checkbox
-                                    checked={selectedProducts.some(
-                                      (p) => p._id === item._id
-                                    )}
-                                    onChange={() => handleSelectProduct(item)}
-                                  />
-                                  <Link to={`/product/${item?.productId}`}>
-                                    <div className="d-flex align-items-center cartItemimgWrapper">
-                                      <div className="imgWrapper">
-                                        <img
-                                          src={item?.image}
-                                          className="w-100"
-                                          alt={item?.productTitle}
-                                        />
-                                      </div>
-
-                                      <div className="info px-3">
-                                        <h6>{item?.productTitle}</h6>
-                                        <Rating
-                                          name="read-only"
-                                          value={item?.rating}
-                                          readOnly
-                                          size="small"
-                                        />
-                                      </div>
+                                <td>
+                                  <div className="d-flex align-items-center"> {/* changed align-items-start to align-items-center */}
+                                    {/* Checkbox column - small fixed width */}
+                                    <div className="pe-2" style={{ width: '40px', flexShrink: 0 }}>
+                                      <Checkbox
+                                        checked={selectedProducts.some((p) => p._id === item._id)}
+                                        onChange={() => handleSelectProduct(item)}
+                                      />
                                     </div>
-                                  </Link>
+
+                                    {/* Product info column - takes remaining space */}
+                                    <div className="flex-grow-1">
+                                      <Link to={`/product/${item?.productId}`} className="text-decoration-none">
+                                        <div className="d-flex align-items-center cartItemimgWrapper">
+                                          <div className="imgWrapper" style={{ width: '60px' }}>
+                                            <img
+                                              src={item?.image}
+                                              className="w-100"
+                                              alt={item?.productTitle}
+                                            />
+                                          </div>
+                                          <div className="info px-3">
+                                            <h6 className="mb-1">{item?.productTitle}</h6>
+                                            <Rating
+                                              name="read-only"
+                                              value={item?.rating}
+                                              readOnly
+                                              size="small"
+                                            />
+                                          </div>
+                                        </div>
+                                      </Link>
+                                    </div>
+                                  </div>
                                 </td>
-                                <td width="15%">Rs {item?.price}</td>
+
+                                <td width="15%" style={{ alignItems: 'center'}}>LKR {item?.price}</td>
 
                                 <td width="10%">
                                   <span
@@ -189,25 +208,17 @@ const Compare = () => {
                     </table>
 
                     <div>
-                      <h2 className="hd mb-1">Important Note</h2>
-                      <p>
-                        You can only compare{" "}
-                        <b className="text-red">two products</b> from the{" "}
-                        <b className="text-red">same category</b> at a time.
-                        Products from{" "}
-                        <b className="text-red">
-                          different categories cannot be compared
-                        </b>
-                        . 🚀
-                      </p>
                       <br />
-                      <Button
-                        className="btn-blue btn-lg btn-big btn-round bg-red"
-                        onClick={compareProducts}
-                      >
-                        <FaCodeCompare />
-                        &nbsp;&nbsp;&nbsp;Compare
-                      </Button>{" "}
+                      <div className="d-flex justify-content-center">
+                        <Button
+                          className="btn-blue btn-lg btn-big btn-round bg-red d-flex align-items-center"
+                          onClick={compareProducts}
+                        >
+                          <FaCodeCompare />
+                          <span className="ms-2">Compare</span>
+                        </Button>
+                      </div>
+
                       <br />
                       <br />
                       {/* {comparisonResult && ( */}
@@ -248,10 +259,10 @@ const Compare = () => {
                                 <strong>Price</strong>
                               </td>
                               <td>
-                                Rs. {comparisonResult?.product1Price || 0}
+                                LKR: {comparisonResult?.product1Price || 0}
                               </td>
                               <td>
-                                Rs. {comparisonResult?.product2Price || 0}
+                                LKR: {comparisonResult?.product2Price || 0}
                               </td>
                             </tr>
                           </tbody>

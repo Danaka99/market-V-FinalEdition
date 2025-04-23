@@ -457,7 +457,7 @@ const Home = () => {
           )}
       </div>
       
-      <ChatBox/>
+     <div className="res-hide"><ChatBox/></div>
             
     </>
   );

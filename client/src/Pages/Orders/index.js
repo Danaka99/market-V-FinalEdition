@@ -166,7 +166,7 @@ const Orders = () => {
                           <td>{order?.phoneNumber}</td>
                           <td>{order?.address}</td>
                           <td>{order?.pincode}</td>
-                          <td>{order?.amount}</td>
+                          <td>LKR:{order?.amount}</td>
                           <td>{order?.email}</td>
                           <td>{order?.userid}</td>
                           <td>
@@ -241,8 +241,8 @@ const Orders = () => {
                         </div>
                       </td>
                       <td>{item?.quantity}</td>
-                      <td>{item?.price}</td>
-                      <td>{item?.subTotal}</td>
+                      <td>LKR:{item?.price}</td>
+                      <td>LKR:{item?.subTotal}</td>
                     </tr>
                   );
                 })}

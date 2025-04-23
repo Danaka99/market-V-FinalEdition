@@ -576,7 +576,7 @@ const Orders = () => {
                             </TableCell>
                             <TableCell>{order?.pincode}</TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
-                              RS: {order?.amount}
+                              LKR: {order?.amount}
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
                               {order?.email}
@@ -684,8 +684,8 @@ const Orders = () => {
                         </div>
                       </td>
                       <td>{item?.quantity}</td>
-                      <td>{item?.price}</td>
-                      <td>{item?.subTotal}</td>
+                      <td>LKR:{item?.price}</td>
+                      <td>LKR:{item?.subTotal}</td>
                     </tr>
                   );
                 })}
@@ -727,6 +727,7 @@ const Orders = () => {
         <Box display="flex" gap={1} my={1}>
           <TextField
             label="Add Item"
+            className="TrackingFedexDetails"
             variant="outlined"
             size="small"
             value={currentItemWeight}
@@ -737,6 +738,7 @@ const Orders = () => {
           <Button
             variant="contained"
             color="primary"
+            className="TrackingFedexDetails TrackingADD"
             onClick={handleShippingItemsWeight}
             disabled={!currentItemWeight ? true : false}
             disableElevation
@@ -752,6 +754,7 @@ const Orders = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Street Line 1"
+              className="TrackingFedexDetails"
               variant="outlined"
               size="small"
               fullWidth
@@ -764,6 +767,7 @@ const Orders = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Street Line 2"
+              className="TrackingFedexDetails"
               variant="outlined"
               size="small"
               fullWidth
@@ -788,6 +792,7 @@ const Orders = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="State/Province Code"
+              className="TrackingFedexDetails"
               variant="outlined"
               size="small"
               fullWidth
@@ -802,6 +807,7 @@ const Orders = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Postal Code"
+              className="TrackingFedexDetails"
               variant="outlined"
               size="small"
               fullWidth
@@ -815,6 +821,7 @@ const Orders = () => {
             <TextField
               label="Country Code"
               variant="outlined"
+              className="TrackingFedexDetails"
               size="small"
               fullWidth
               value={formData.address.countryCode}
@@ -832,6 +839,7 @@ const Orders = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Person Name"
+              className="TrackingFedexDetails"
               variant="outlined"
               size="small"
               fullWidth
@@ -844,6 +852,7 @@ const Orders = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Email Address"
+              className="TrackingFedexDetails"
               variant="outlined"
               size="small"
               fullWidth
@@ -860,6 +869,7 @@ const Orders = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Phone Extension"
+              className="TrackingFedexDetails"
               variant="outlined"
               size="small"
               fullWidth
@@ -872,6 +882,7 @@ const Orders = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Phone Number"
+              className="TrackingFedexDetails"
               variant="outlined"
               size="small"
               fullWidth
@@ -885,6 +896,7 @@ const Orders = () => {
 
         <TextField
           label="Company Name"
+          className="TrackingFedexDetails"
           variant="outlined"
           size="small"
           fullWidth
@@ -899,6 +911,7 @@ const Orders = () => {
           variant="contained"
           color="primary"
           type="submit"
+          className="FedexSubmit"
           onClick={handleShipSubmit}
           disabled={!isFormValid()}
         >
@@ -1040,7 +1053,7 @@ const Orders = () => {
                         scope="row"
                         sx={{ color: "#0073e6", fontWeight: 500 }}
                       >
-                        {formatDate(event.date)}
+                        <div className="OrderTracking"> {formatDate(event.date)}</div>
                       </TableCell>
                       <TableCell>{event.eventDescription}</TableCell>
                       <TableCell>

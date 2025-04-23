@@ -232,9 +232,9 @@ const ProductItem = (props) => {
           />
 
           <div className="d-flex">
-            <span className="oldPrice">Rs {props?.item?.oldPrice}</span>
+            <span className="oldPrice">LKR {props?.item?.oldPrice}</span>
             <span className="netPrice text-danger ml-2">
-              Rs {props?.item?.price}
+              LKR {props?.item?.price}
             </span>
           </div>
         </div>

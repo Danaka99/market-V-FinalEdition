@@ -373,10 +373,10 @@ const Products = () => {
                               </span>
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
-                              <div style={{ width: "70px" }}>
-                                <del className="old">Rs {item?.oldPrice}</del>
+                              <div style={{ width: "100px" }}>
+                                <del className="old">LKR: {item?.oldPrice}</del>
                                 <span className="new text-danger  d-block w-100">
-                                  Rs {item?.price}
+                                  LKR: {item?.price}
                                 </span>
                               </div>
                             </TableCell>
