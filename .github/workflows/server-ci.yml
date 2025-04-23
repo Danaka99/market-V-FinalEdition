@@ -1,66 +1,97 @@
-name: Server CI Pipeline
+name: Node.js Tests
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - "server/**"
-
+    branches: [main]
   pull_request:
-    branches:
-      - main
-    paths:
-      - "server/**"
-
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
   test:
-    name: Run Server Tests
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+    strategy:
+      matrix:
+        node-version: [18.x]
+        mongodb-version: ["6.0"]
 
-      - name: Set up Node.js
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.10.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+          mongodb-port: 27017
+          mongodb-db: test
 
       - name: Install dependencies
-        run: |
-          cd server
-          npm install
+        run: npm ci
 
-      - name: Use .env.test file
+      - name: Install MongoDB Shell
         run: |
-          cp server/.env.test server/.env
-        shell: bash
+          echo "Installing MongoDB Shell..."
+          wget -qO- https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+          echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-mongosh
+          echo "MongoDB Shell installed successfully"
 
-      - name: Run Unit Tests
+      - name: Wait for MongoDB and verify connection
         run: |
-          cd server
-          npm run test:unit
+          echo "Waiting for MongoDB to be ready..."
+          for i in {1..30}; do
+            if mongosh --eval "db.runCommand({ping:1})" --quiet mongodb://localhost:27017/test; then
+              echo "MongoDB is ready!"
+              exit 0
+            fi
+            echo "Attempt $i: MongoDB not ready yet..."
+            sleep 1
+          done
+          echo "Error: MongoDB failed to become ready in time"
+          exit 1
 
-      - name: Run Integration Tests
-        run: |
-          cd server
-          npm run test:integration
+      - name: Run unit tests
+        run: npm run test:unit
+        env:
+          NODE_ENV: test
+          CONNECTION_STRING: mongodb://localhost:27017/test
+          MONGODB_TIMEOUT: 30000
+          MOCHA_TIMEOUT: 30000
 
-      - name: Run Performance Tests
-        run: |
-          cd server
-          npm run test:performance
+      - name: Run integration tests
+        run: npm run test:integration
+        env:
+          NODE_ENV: test
+          CONNECTION_STRING: mongodb://localhost:27017/test
+          MONGODB_TIMEOUT: 30000
+          MOCHA_TIMEOUT: 30000
 
-      - name: Generate Test Coverage
-        run: |
-          cd server
-          npm run test:coverage
+      - name: Run performance tests
+        run: npm run test:performance
+        env:
+          NODE_ENV: test
+          CONNECTION_STRING: mongodb://localhost:27017/test
+          MONGODB_TIMEOUT: 30000
+          MOCHA_TIMEOUT: 30000
 
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v3
+      - name: Generate test coverage
+        run: npm run test:coverage
+        env:
+          NODE_ENV: test
+          CONNECTION_STRING: mongodb://localhost:27017/test
+          MONGODB_TIMEOUT: 30000
+          MOCHA_TIMEOUT: 30000
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: server/coverage
+          path: coverage/
+          retention-days: 7
