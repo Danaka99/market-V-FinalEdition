@@ -20,6 +20,7 @@
   border-radius: 50%;
   cursor: pointer;
   transition: 0.2s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .chatboxToggle:active {
@@ -30,13 +31,14 @@
   position: absolute;
   bottom: calc(100% + 1rem);
   right: 0;
-  width: 500px;
+  width: 360px;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0.5rem 0.5rem 2rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0.5rem 0.5rem 2rem rgba(0, 0, 0, 0.2);
   transform: scale(0);
   transform-origin: bottom right;
   transition: 0.2s;
+  background: #f5f5f5;
 }
 
 .chatboxMessageWrapperShow {
@@ -46,10 +48,11 @@
 .chatboxMessageHeader {
   display: flex;
   align-items: center;
-  height: 5rem;
+  height: 4rem;
   justify-content: space-between;
-  background: #FFF;
+  background: #6d4aae;
   padding: 0.75rem 1.5rem;
+  color: white;
 }
 
 .chatboxMessageProfile {
@@ -59,88 +62,48 @@
 }
 
 .chatboxMessageImage {
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   object-fit: cover;
   border-radius: 50%;
+  background: white;
+  padding: 3px;
+}
+
+.chatboxMessageImage svg {
+  width: 100%;
+  height: 100%;
 }
 
 .chatboxMessageName {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
+  margin: 0;
 }
 
 .chatboxMessageStatus {
-  font-size: 0.875rem;
-  color: #888;
-}
-
-.chatboxMessageDropdown {
-  position: relative;
-}
-
-.chatboxMessageDropdownToggle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: 1.25rem;
-  cursor: pointer;
-  border-radius: 50%;
-}
-
-.chatboxMessageDropdownToggle:hover {
-  background: #F5F5F5;
-}
-
-.chatboxMessageDropdownMenu {
-  list-style: none;
+  font-size: 0.75rem;
+  color: #e0e0e0;
   margin: 0;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: #FFF;
-  padding: 0.5rem 0;
-  width: 120px;
-  box-shadow: 0.25rem 0.25rem 1.5rem rgba(0, 0, 0, 0.1);
-  transform: scale(0);
-  transform-origin: top right;
-  transition: 0.2s;
-  border-radius: 0.5rem;
-}
-
-.chatboxMessageDropdownMenuShow {
-  transform: scale(1);
-}
-
-.chatboxMessageDropdownMenu a {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #222;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  display: block;
-}
-
-.chatboxMessageDropdownMenu a:hover {
-  background: #F5F5F5;
 }
 
 .chatboxMessageContent {
-  background: #F5F5F5;
-  padding: 1.5rem;
-  height: 500px;
+  background: #f5f5f5;
+  padding: 1rem;
+  height: 350px;
   display: flex;
   flex-direction: column;
   row-gap: 1rem;
-  max-height: 300px;
   overflow-y: auto;
 }
 
 .chatboxMessageItem {
   width: 90%;
-  padding: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  position: relative;
 }
 
 .chatboxMessageItemSent {
@@ -153,27 +116,29 @@
 .chatboxMessageItemReceived {
   background: #FFF;
   border-radius: 0 0.75rem 0.75rem 0.75rem;
-  box-shadow: 0.25rem 0.25rem 1.5rem rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .chatboxMessageItemTime {
   float: right;
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
-  display: inline-block;
+  font-size: 0.7rem;
+  margin-top: 0.25rem;
+  margin-left: 0.5rem;
+  opacity: 0.7;
 }
 
 .chatboxMessageBottom {
   background: #FFF;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid #eee;
 }
 
 .chatboxMessageForm {
   display: flex;
   align-items: center;
-  background: #F5F5F5;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1.25rem;
+  background: #f0f0f0;
+  border-radius: 1.5rem;
+  padding: 0.5rem 1rem;
   position: relative;
 }
 
@@ -184,6 +149,9 @@
   resize: none;
   scrollbar-width: none;
   flex-grow: 1;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-family: inherit;
 }
 
 .chatboxMessageInput::-webkit-scrollbar {
@@ -196,34 +164,133 @@
   border: none;
   outline: none;
   cursor: pointer;
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
   background: transparent;
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatboxMessageSubmit:hover {
+  color: #53348c !important;
 }
 
 .chatboxMessageNoMessage {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   text-align: center;
+  color: #666;
+  margin: auto;
 }
 
 .typingIndicator {
   background: #FFF;
   border-radius: 0 0.75rem 0.75rem 0.75rem;
-  box-shadow: 0.25rem 0.25rem 1.5rem rgba(0, 0, 0, 0.05);
-  padding: 1rem;
-  width: 90%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  padding: 0.75rem;
+  width: 60px;
+}
+
+/* Product suggestions styling */
+.productSuggestions {
+  width: 95%;
+  padding: 0.75rem;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.productCard {
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.productCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.productImage {
+  height: 80px;
+  overflow: hidden;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.productImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.productInfo {
+  padding: 0.5rem;
+}
+
+.productInfo h4 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: #333;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 2.4em;
+}
+
+.productPrice {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #53348c;
+  margin: 0;
+}
+
+.moreProducts {
+  text-align: center;
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  font-size: 0.8rem;
+}
+
+.moreProducts a {
+  color: #6d4aae;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.moreProducts a:hover {
+  text-decoration: underline;
 }
 
 @media screen and (max-width: 576px) {
   .chatboxMessageWrapper {
     width: calc(100vw - 2rem);
+    max-width: 360px;
   }
 
   .chatboxWrapper {
     bottom: 1rem;
     right: 1rem;
+  }
+
+  .productGrid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   }
 }
