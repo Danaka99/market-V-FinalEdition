@@ -64,7 +64,7 @@ function App() {
 
   const [isOpenNav, setIsOpenNav] = useState(false);
 
-  const [baseUrl, setBaseUrl] = useState("https://market-v.onrender.com");
+  const [baseUrl, setBaseUrl] = useState("https://market-v-finaledition-mgkm.onrender.com");
 
   const [progress, setProgress] = useState(0);
   const [alertBox, setAlertBox] = useState({
