@@ -10,7 +10,7 @@ import { fetchDataFromApi, postData, deleteData } from "../../utils/api";
 const PayhereScript = ({ onPaymentSuccess }) => {
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://www.payhere.lk/lib/payhere.js";
+    script.src = "https://sandbox.payhere.lk/lib/payhere.js";
     script.async = true;
     script.onload = () => {
       window.payhere.onCompleted = function onCompleted(orderId) {
