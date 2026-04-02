@@ -9,8 +9,8 @@ require('dotenv/config');
 
 const corsOptions = {
   origin: [
-    "http://localhost:3006",
-    "http://localhost:3002",
+    "https://market-v-client.netlify.app/",
+    "https://app.netlify.com/projects/market-v-admin/overview",
     "https://sandbox.payhere.lk",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
